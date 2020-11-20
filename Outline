@@ -1,0 +1,24 @@
+'''
+Outline of Rental System
+
+1. Rent and Return functions to be called depending on user input
+
+2. Create account (username and password) if user does not already have one
+
+3. Sign into account if user already has an account
+
+4. Return bike back to list if user inputs "return"
+  a. Take time of return and calculate time out
+  b. Charge user based on rate per min/hour
+
+5. Rent bike if user inputs "rent"
+  a. Give bike to user
+  b. Initiate time to start rental
+  c. Update lists of rented and housed bikes
+
+Functions/Classes
+  rent function
+  return function
+  new_user
+  initiate function
+  bike class
