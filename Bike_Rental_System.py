@@ -101,5 +101,15 @@ def password(enc_msg, usr, passwd, N, D):
         return(decrypt(enc_msg, N, D))
     else:
         raise AssertionError("Password is incorrect")
+def rent_or_return():
+    function = input("Would you like to Rent (1) or Return (2) \n")
+    if function == '1' or function == 'Rent':
+        print("Thanks for renting with us!")
+    if function == '2' or function == 'Return':
+        print('Thanks for returning your bike!')
+    else:
+        print("Please try again and input a valid command.")
 
+if __name__ == '__main__':
+    rent_or_return()
 
