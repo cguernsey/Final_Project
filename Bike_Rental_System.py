@@ -102,10 +102,24 @@ def password(enc_msg, usr, passwd, N, D):
     else:
         raise AssertionError("Password is incorrect")
 def rent_or_return():
-    function = input("Would you like to Rent (1) or Return (2) \n")
+    function = input("Would you like to Rent (1) or Return (2)? \n")
     if function == '1' or function == 'Rent':
-        print("Thanks for renting with us!")
-    if function == '2' or function == 'Return':
+        
+        #RENT Function Goes Here
+        
+            #LOGIN FUNCTION
+            
+            #CREATE ACCOUNT FUNCTION (__init__(new_user))
+        
+            #RENT_BIKE FUNCTION    
+            
+        
+    print("Thanks for renting with us!")
+    
+    elif function == '2' or function == 'Return':
+        
+        #RETURN Function Goes Here
+        
         print('Thanks for returning your bike!')
     else:
         print("Please try again and input a valid command.")
