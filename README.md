@@ -1,7 +1,11 @@
 # Final_Project
+
 Final Project - JHU EN.640.635
+
 Bike Rental System
+
 Team Members: Cameron Carter & Cameron Guernsey
+
 This project consists of a single python code: Final_Project.py
 This python code creates a system that resembles the functionality of a bike rental system.
 The rental system allows users to create accounts and login to what would likely be a mobile app.
