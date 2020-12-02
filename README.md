@@ -2,7 +2,7 @@
 
 Final Project - JHU EN.640.635
 
-Bike Rental System
+Cam & Cam's Harbor Bike Rentals
 
 Team Members: Cameron Carter & Cameron Guernsey
 
