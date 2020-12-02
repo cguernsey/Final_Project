@@ -6,7 +6,7 @@ Bike Rental System
 
 Team Members: Cameron Carter & Cameron Guernsey
 
-This project consists of a single python code: Final_Project.py
+This project consists of a single python code: Final_Project.py.
 This python code creates a system that resembles the functionality of a bike rental system.
 The rental system allows users to create accounts and login to what would likely be a mobile app.
 Users are then able to rent and return bikes similar to how Bird or Lime offer an electric scooter rental system.
