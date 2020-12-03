@@ -263,18 +263,21 @@ class User:
 
         # user_list = user_list.append(self.user_info)
 
-def create_account():
+def create_account(user_list):
     '''
     This function creates a new user account for first time users
     and will create new User objects.
 
     **Parameters**
 
-        None
+        name: *str*
+            The name input by the user creating the account
 
     **Returns**
 
-        None
+        user_list: *list of lists, str*
+            The user_list is the master list of users that tracks
+            their attributes as strings.
     '''
 
     # Create a new user object when the new account is initiated
@@ -292,9 +295,63 @@ def create_account():
 
     print("User List: ")
     print(user_list)
+    
+    return(user_list)
 
-        
+def login(user_list):
+    '''
+    This function allows a user to login to their account if
+    they have already created one and are renting a bike.
+
+    **Parameters**
+
+        user_list: *list of lists, str*
+            This takes in the master list of users that has already
+            been created
+
+    **Returns**
+
+        None
+    '''
+
+    usrname = input("What is your username? ")
+    pssword = getpass.getpass("What is your password? ")
+
+    # Return to the main screen if no users have been created yet
+    if len(user_list) == 0:
+        print("There are no existing users! ")
+        rent_or_return()
+
+    else:
+        # Search for the user in the master list based on username and pass
+        for i in range(len(user_list)):
+            if user_list[i][2] == usrname and user_list[i][3] == encrypt(pssword, 
+                user_list[i][6], user_list[i][7]):
+
+                # Record the found user and break the loop
+                f_name = user_list[i][0]
+                print("Welcome " + f_name + "!")
+                user = user_list[i]
+                break
+            else:
+                print("Username or Password incorrect ")
+                login(user_list)
+
+    return(user)
+
+
 def rent_or_return():
+    '''
+    This initializes the system and acts as the main screen.
+
+    **Parameters**
+    
+        None
+    
+    **Returns**
+
+        None
+    '''
 
     # Initialize the users list if it does not exist
     if 'user_list' in globals() or 'user_list' in locals():
@@ -309,10 +366,10 @@ def rent_or_return():
         f2 = input(" 'Login' (1) or 'Create an Account' (2) ")
         if f2 == '1' or f2 == 'Login':
             #LOGIN FUNCTION
-            login()
+            login(user_list)
         elif f2 == '2' or f2 == 'Create an Account':
             #CREATE ACCOUNT FUNCTION
-            create_account()
+            user_list = create_account(user_list)
                 #RENT_BIKE FUNCTION
         else:
             print("Invalid Input. Select Login (1) or Create an Account (2) ")
@@ -328,6 +385,7 @@ def rent_or_return():
         print('Thanks for returning your bike!')
     else:
         print("Please try again and input a valid command.")
+        
 
 if __name__ == '__main__':
     rent_or_return()
