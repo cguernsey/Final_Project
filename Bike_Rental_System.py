@@ -298,18 +298,13 @@ def create_account():
     print("Let's create a new account. ")
     new_user = User()
 
-    print(new_user)
-    print("Decrypted Password: ")
-    print(decrypt(new_user.password, new_user.N, new_user.D))
-    print("User List: ")
-    print(user_list)
-
     # Append the users list to include the new user
     user_list.append(new_user)
 
+    # Print the list of users
     print("User List: ")
     print(user_list)
-    
+
     return user_list, new_user
 
 def login():
@@ -397,11 +392,17 @@ def rent_bike():
         print("Remaining bikes available: \n")
         print(available_bikes)
 
-        for i in range(len(user_list)):
-            if user == str(user_list[i]):
-                user_list[i].status = "Renting"
-                user_list[i].bike = bike_number
-                user_list[i].time_out = datetime.now()
+        for item in user_list:
+            if user == item:
+                user.status = "Renting"
+                user.bike = bike_number
+                user.time_out = datetime.now()
+                item = user
+                user.user_info = [user.lastname, user.firstname, user.username,
+                    user.password, user.status, user.bike, [user.N, user.E, user.D],
+                    user.time_out, user.time_in]
+             else:
+                pass
 
     else:
         print("Please choose a valid bike number from the list. \n")
@@ -427,6 +428,7 @@ def rent_or_return():
     # Reference to user_list as global variable
     global user_list
 
+    # Choose to rent or return a bike
     function = input("Would you like to 'Rent' (1) or 'Return' (2)? \n")
     if function == '1' or function == 'Rent':
 
@@ -443,7 +445,7 @@ def rent_or_return():
 
         else:
             print("Invalid Input. Select Login (1) or Create an Account (2) ")
-            # Send back to main login page if invalid input
+            # Send back to main rent or return login page if invalid input
             user_list = rent_or_return()
         
         print("Thanks for renting with us!")
@@ -467,6 +469,8 @@ if __name__ == "__main__":
 
         user_list = rent_or_return()
         print(user_list)
+        
+        # Allow user to break loop to simulate closing app
         if input("Continue? Y or N \n") == "N":
             break
         
