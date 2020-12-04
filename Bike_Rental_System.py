@@ -389,7 +389,20 @@ def rent_or_return():
         elif f2 == '2' or f2 == 'Create an Account':
             #CREATE ACCOUNT FUNCTION
             user_list, user = create_account()
-                #RENT_BIKE FUNCTION
+            def rent_bike():
+                print("Choose a bike from the following:")
+                print(available_bikes)
+                bike_number = input("What is your bike number? \n")
+    
+                if bike_number in available_bikes:
+                    print("Thanks for renting bike number " + bike_number + "! \n")
+                    available_bikes.remove(bike_number)
+                    print("Remaining bikes available: \n")
+                    print(available_bikes)
+        
+                else:
+                    print("Please choose a valid bike number from the list. \n")
+                    rent_bike()
         else:
             print("Invalid Input. Select Login (1) or Create an Account (2) ")
             # Send back to main login page if invalid input
