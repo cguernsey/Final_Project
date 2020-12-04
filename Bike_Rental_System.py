@@ -7,10 +7,9 @@ Cameron Carter and Cameron Guernsey
 
 import math
 import random
-import hashlib
-import pandas as pd
 import numpy as np
 import getpass
+import xlsxwriter
 
 def is_prime(p):
     '''
@@ -361,6 +360,28 @@ def login():
     return user
 
 
+available_bikes = ['A1', 'A2', 'A3', 'A4', 'A5',
+                   'B1', 'B2', 'B3', 'B4', 'B5',
+                   'C1', 'C2', 'C3', 'C4', 'C5',
+                   'D1', 'D2', 'D3', 'D4', 'D5',
+                   'E1', 'E2', 'E3', 'E4', 'E5']
+
+def rent_bike():
+    print("Choose a bike from the following:")
+    print(available_bikes)
+    bike_number = input("What is your bike number? \n")
+
+    if bike_number in available_bikes:
+        print("Thanks for renting bike number " + bike_number + "! \n")
+        available_bikes.remove(bike_number)
+        print("Remaining bikes available: \n")
+        print(available_bikes)
+
+    else:
+        print("Please choose a valid bike number from the list. \n")
+        rent_bike()
+
+                    
 def rent_or_return():
     '''
     This initializes the system and acts as the main screen.
@@ -389,20 +410,7 @@ def rent_or_return():
         elif f2 == '2' or f2 == 'Create an Account':
             #CREATE ACCOUNT FUNCTION
             user_list, user = create_account()
-            def rent_bike():
-                print("Choose a bike from the following:")
-                print(available_bikes)
-                bike_number = input("What is your bike number? \n")
-    
-                if bike_number in available_bikes:
-                    print("Thanks for renting bike number " + bike_number + "! \n")
-                    available_bikes.remove(bike_number)
-                    print("Remaining bikes available: \n")
-                    print(available_bikes)
-        
-                else:
-                    print("Please choose a valid bike number from the list. \n")
-                    rent_bike()
+
         else:
             print("Invalid Input. Select Login (1) or Create an Account (2) ")
             # Send back to main login page if invalid input
@@ -420,11 +428,6 @@ def rent_or_return():
 
     return user_list
 
-available_bikes = ['A1', 'A2', 'A3', 'A4', 'A5',
-                   'B1', 'B2', 'B3', 'B4', 'B5',
-                   'C1', 'C2', 'C3', 'C4', 'C5',
-                   'D1', 'D2', 'D3', 'D4', 'D5',
-                   'E1', 'E2', 'E3', 'E4', 'E5']
 
 if __name__ == "__main__":
     # Initialize the user list outside of the functions
