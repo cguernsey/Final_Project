@@ -10,6 +10,7 @@ import random
 import numpy as np
 import getpass
 import xlsxwriter
+from datetime import datetime
 
 def is_prime(p):
     '''
@@ -256,9 +257,12 @@ class User:
         # Initialize the default rental status and bike rented
         self.status = "Not Renting"
         self.bike = "None"
+        self.time_out = 0
+        self.time_in = 0
 
         self.user_info = [self.firstname, self.lastname, self.username,
-            self.password, self.status, self.bike]
+            self.password, self.status, self.bike, [self.N, self.E, self.D],
+            self.time_out, self.time_in]
 
     def __str__(self):
         '''
@@ -279,8 +283,7 @@ def create_account():
 
     **Parameters**
 
-        name: *str*
-            The name input by the user creating the account
+        None
 
     **Returns**
 
@@ -316,13 +319,12 @@ def login():
 
     **Parameters**
 
-        user_list: *list of objects*
-            This takes in the master list of users that has already
-            been created
+        None
 
     **Returns**
 
-        None
+        user: *object*
+            The user object and its attributes
     '''
 
     # Reference to user_list as global variable
@@ -367,20 +369,47 @@ available_bikes = ['A1', 'A2', 'A3', 'A4', 'A5',
                    'E1', 'E2', 'E3', 'E4', 'E5']
 
 def rent_bike():
+    '''
+    This removes the rented bike from the available list and
+    tracks the real time that the user rented the bike.
+
+    **Parameters**
+
+        user: *object*
+            The user to record who rented the bike
+    
+    **Returns**
+    
+        user_list: *list of objects*
+            The master list of users
+    '''
+
+    # Reference to user_list as global variable
+    global user_list
+
     print("Choose a bike from the following:")
     print(available_bikes)
     bike_number = input("What is your bike number? \n")
 
     if bike_number in available_bikes:
-        print("Thanks for renting bike number " + bike_number + "! \n")
+        print("Thanks for renting bike " + bike_number + "! \n")
         available_bikes.remove(bike_number)
         print("Remaining bikes available: \n")
         print(available_bikes)
 
+        for i in range(len(user_list)):
+            if user == str(user_list[i]):
+                user_list[i].status = "Renting"
+                user_list[i].bike = bike_number
+                user_list[i].time_out = datetime.now()
+
     else:
         print("Please choose a valid bike number from the list. \n")
-        rent_bike()
+        user_list = rent_bike(user)
 
+    print("You will be charged a flat $5 plus $0.25 per minute ")
+
+    return user_list
                     
 def rent_or_return():
     '''
@@ -400,16 +429,17 @@ def rent_or_return():
 
     function = input("Would you like to 'Rent' (1) or 'Return' (2)? \n")
     if function == '1' or function == 'Rent':
-        
-        #RENT Function Goes Here
+
         f2 = input(" 'Login' (1) or 'Create an Account' (2) \n")
         if f2 == '1' or f2 == 'Login':
-            #LOGIN FUNCTION
+            # Login
             user = login()
-            print(user)
+            user_list = rent_bike(user)
+            
         elif f2 == '2' or f2 == 'Create an Account':
-            #CREATE ACCOUNT FUNCTION
+            # Create account
             user_list, user = create_account()
+            user_list = rent_bike(user)
 
         else:
             print("Invalid Input. Select Login (1) or Create an Account (2) ")
