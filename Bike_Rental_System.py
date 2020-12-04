@@ -261,7 +261,17 @@ class User:
         self.user_info = [self.firstname, self.lastname, self.username,
             self.password, self.status, self.bike]
 
-        # user_list = user_list.append(self.user_info)
+    def __str__(self):
+        '''
+        Makes the user refer to itself as its username
+        '''
+        return self.username
+
+    def __repr__(self):
+        '''
+        Allows you to use print() or to write str(user)
+        '''
+        return str(self)
 
 def create_account(user_list):
     '''
