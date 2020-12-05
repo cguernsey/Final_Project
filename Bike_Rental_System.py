@@ -615,7 +615,7 @@ def create_excel():
     for item in headers:
         worksheet.write(row, column, item)
         column += 1
-    
+
     # Reset row and column index to add users
     row = 1
     column = 0
@@ -627,13 +627,9 @@ def create_excel():
             worksheet.write(row, column, str(i.user_info[j]))
             column += 1
         row += 1
-    
-    # Add a second worksheet to view the availability of the bike inventory
-    # worksheet2 = workbook.add_worksheet("Bikes")
-
 
     workbook.close()
-            
+
 
 if __name__ == "__main__":
     # Initialize the user list outside of the functions
