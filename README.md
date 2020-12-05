@@ -36,3 +36,5 @@ The user can then type either "Rent" or the number 1 in order to call the rent f
 When creating an account or logging in, the user will have to manually input their desired information and press enter.
 As a note, the input for the password is hidden from the user so that the password will never be physically displayed in the code or the terminal.
 It will be saved as an encrypted string in the master list.
+Once the user is finished and closes the programs, the create_excel() function is called which turns the master list into an Excel database.
+This spreadsheet holds all of the users' information to identify them (including the encrypted password, not the password itself) and display their current rental status.
