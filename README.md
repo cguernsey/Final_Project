@@ -7,6 +7,7 @@ Cam & Cam's Harbor Bike Rentals
 Team Members: Cameron Carter & Cameron Guernsey
 
 This project consists of a single python code: Bike_Rental_System.py.
+
 This python code, when entered in a terminal, runs a program that functions as a bike rental system.
 The program allows users to create their own accounts and login securely to what would be considered our "database."
 Users are then able to rent and return bikes similar to the services Bird and Lime offer with electric scooter rentals.
