@@ -294,17 +294,25 @@ def create_account():
             The User object in order to update rental information
     '''
 
+    # Reference to user_list as global variable
+    global user_list
+
     # Create a new user object when the new account is initiated
     print("Let's create a new account. ")
     new_user = User()
 
+    if str(new_user) in str(user_list):
+        print("Username already taken. Please choose another. ")
+        new_user = User()
+
+        
     # Append the users list to include the new user
     user_list.append(new_user)
 
     # Print the list of users
     print("User List: ")
     print(user_list)
-
+    
     return user_list, new_user
 
 def login():
@@ -322,48 +330,39 @@ def login():
             The user object and its attributes
     '''
 
-    # Reference to user_list as global variable
+    # Reference to user_list and available_bikes as global variables
     global user_list
+    global available_bikes
 
-    # Return to the main screen if no users have been created yet
-    if len(user_list) == 0:
-        print("There are no existing users! ")
-        user_list = rent_or_return()
+    # Initialize user as not found
+    user = "Not found"
 
-    else:
-        user = "Not found"
-        # Allow user to input username and password
-        usrname = input("What is your username? ")
-        pssword = getpass.getpass("What is your password? ")
+    # Allow user to input username and password
+    usrname = input("What is your username? ")
+    pssword = getpass.getpass("What is your password? ")
 
-        # Search for the user in the master list based on username and pass
-        for i in range(len(user_list)):
+    # Search for the user in the master list based on username and pass
+    for i in range(len(user_list)):
 
-            if str(user_list[i]) == usrname and decrypt(user_list[i].password,
-                user_list[i].N, user_list[i].D) == pssword:
+        if str(user_list[i]) == usrname and decrypt(user_list[i].password,
+            user_list[i].N, user_list[i].D) == pssword:
 
-                # Record the found user and break the loop
-                print("Welcome " + user_list[i].firstname + "!")
-                user = user_list[i]
-                break
+            # Record the found user and break the loop
+            print("Welcome " + user_list[i].firstname + "!")
+            user = user_list[i]
+            break
 
-        if user == "Not found":
-            print("Username or Password incorrect ")
-            if input("Try again? Y or N \n") == "Y":
-                user = login()
-            else:
-                user_list = rent_or_return()
+    if user == "Not found":
+        print("Username or Password incorrect ")
+        if input("Try again? Y or N \n") == "Y":
+            user = login()
+        else:
+            user_list, available_bikes = rent_or_return()
 
     return user
 
 
-available_bikes = ['A1', 'A2', 'A3', 'A4', 'A5',
-                   'B1', 'B2', 'B3', 'B4', 'B5',
-                   'C1', 'C2', 'C3', 'C4', 'C5',
-                   'D1', 'D2', 'D3', 'D4', 'D5',
-                   'E1', 'E2', 'E3', 'E4', 'E5']
-
-def rent_bike():
+def rent_bike(user):
     '''
     This removes the rented bike from the available list and
     tracks the real time that the user rented the bike.
@@ -379,46 +378,217 @@ def rent_bike():
             The master list of users
     '''
 
-    # Reference to user_list as global variable
+    # Reference to user_list and available_bikes as global variables
     global user_list
+    global available_bikes
 
     print("Choose a bike from the following:")
     print(available_bikes)
     bike_number = input("What is your bike number? \n")
 
-    if bike_number in available_bikes:
+    # Check if the bike number exists and user did not input "OUT"
+    if bike_number in available_bikes and not bike_number == "OUT":
         print("Thanks for renting bike " + bike_number + "! \n")
-        available_bikes.remove(bike_number)
+
+        # List comprehension to replace rented bike
+        available_bikes = ["OUT" if bik == bike_number else bik for \
+            bik in available_bikes]
         print("Remaining bikes available: \n")
         print(available_bikes)
 
         for item in user_list:
             if user == item:
+                # Update user attributes for rental
                 user.status = "Renting"
                 user.bike = bike_number
                 user.time_out = datetime.now()
                 item = user
+                # Update the user_info attribute to reflect changes
                 user.user_info = [user.lastname, user.firstname, user.username,
                     user.password, user.status, user.bike, [user.N, user.E, user.D],
                     user.time_out, user.time_in]
-             else:
+            else:
                 pass
 
     else:
         print("Please choose a valid bike number from the list. \n")
         user_list = rent_bike(user)
 
-    print("You will be charged a flat $5 plus $0.25 per minute ")
-
     return user_list
-                    
+
+
+def rental_check(user):
+    '''
+    This checks the rental status of a user.
+
+    **Parameters**
+
+        user: *object*
+            The user looking to rent a bike
+
+    **Returns**
+
+        *bool*
+            Return False if user is already renting
+    '''
+
+    if user.status == "Renting":
+        print("You are already renting a bike. ")
+        print("Please return your rented bike before renting another. ")
+        
+        return False
+    else:
+        return True
+
+
+def return_bike():
+    '''
+    This returns a bike based on the bike number and updates the
+    appropriate user's information accordingly.
+
+    **Parameters**
+
+        None
+    
+    **Returns**
+
+        user_list: *list of objects*
+            The master list of users
+        available_bikes: *list of str*
+            The current bike list of available bikes
+    '''
+
+    # Reference to user_list and available_bikes as global variable
+    global user_list
+    global available_bikes
+
+    # Set the bike and cost variables
+    bike_number = input("What is your bike number? \n")
+    flat_fee = 4
+    rate = 0.10
+
+    # Check to see if the inputted bike is correctly missing from the list
+    if bike_number not in available_bikes:
+
+        # Return bike if bike number matches user's rented bike
+        for item in user_list:
+            if bike_number == item.bike:
+                # Update the user info after returning the bike
+                item.status = "Not Renting"
+                item.bike = "None"
+                item.time_in = datetime.now()
+                # Update the user_info attribute to reflect changes
+                item.user_info = [item.lastname, item.firstname, item.username,
+                    item.password, item.status, item.bike, [item.N, item.E, item.D],
+                    item.time_out, item.time_in]
+
+                # Calculate time the bike was rented and cost to user
+                time_rented = item.time_in - item.time_out
+                min_rented = time_rented.total_seconds()/60
+                cost = float(flat_fee) + (rate * float(min_rented))
+                print("Your cost for this ride is $", round(cost,2))
+
+                # Replace the bike back into the list of available bikes
+                let = bike_number[0]
+                if let == "A":
+                    num = int(bike_number[1]) - 1
+                elif let == "B":
+                    num = int(bike_number[1]) + 4
+                elif let == "C":
+                    num = int(bike_number[1]) + 9
+                elif let == "D":
+                    num = int(bike_number[1]) + 14
+                elif let == "E":
+                    num = int(bike_number[1]) + 19
+                
+                # Replace bike if the list item is labeled as "OUT"
+                if available_bikes[num] == "OUT":
+                    available_bikes[num] = bike_number
+            
+            else:
+                pass
+    
+    else:
+        print("This is not a valid bike number to return. ")
+        user_list, available_bikes = rent_or_return()
+    
+    return user_list, available_bikes
+
+
+
 def rent_or_return():
     '''
     This initializes the system and acts as the main screen.
 
     **Parameters**
-    
+
         None
+
+    **Returns**
+
+        user_list: *list of objects*
+            The master list of users
+        available_bikes: *list of str*
+            The current bike list of available bikes
+    '''
+
+    # Reference to user_list and available_bikes as global variables
+    global user_list
+    global available_bikes
+
+    # Choose to rent or return a bike
+    function = input("Would you like to 'Rent' (1) or 'Return' (2)? Or enter 'Exit' (0) to exit the program. \n")
+    if function == '1' or function == 'Rent':
+        
+        f2 = input(" 'Login' (1) or 'Create an Account' (2) \n")
+        if f2 == '1' or f2 == 'Login':
+            # Check if any users have been created first
+            if len(user_list) == 0:
+                print("There are no existing users! ")
+                user_list, available_bikes = rent_or_return()
+            else:
+                # Login if selected by user and users exist
+                user = login()
+                if rental_check(user):
+                    user_list = rent_bike(user)
+                else:
+                    user_list, available_bikes = rent_or_return()
+
+        elif f2 == '2' or f2 == 'Create an Account':
+            # Create Account
+            user_list, user = create_account()
+            user_list = rent_bike(user)
+
+        else:
+            print("Invalid Input. Select Login (1) or Create an Account (2) ")
+            # Send back to main login page if invalid input
+            user_list, available_bikes = rent_or_return()
+        
+        print("Thanks for renting with us!")
+    
+    elif function == '2' or function == 'Return':
+        
+        # Return bike
+        user_list, available_bikes = return_bike()
+        print("Thanks for returning your bike! ")
+
+    # Exit the program
+    elif function == '0' or function == 'Exit':
+        pass
+    
+    else:
+        print("Please try again and input a valid command.")
+
+    return user_list, available_bikes
+
+def create_excel():
+    '''
+    This writes the user list to an excel document for reference.
+
+    **Parameters**
+
+        user_list: *list of objects*
+            The list of users
     
     **Returns**
 
@@ -428,49 +598,69 @@ def rent_or_return():
     # Reference to user_list as global variable
     global user_list
 
-    # Choose to rent or return a bike
-    function = input("Would you like to 'Rent' (1) or 'Return' (2)? \n")
-    if function == '1' or function == 'Rent':
+    # Create the excel workbook
+    workbook = xlsxwriter.Workbook('Bike_Rental_User_Data.xlsx')
 
-        f2 = input(" 'Login' (1) or 'Create an Account' (2) \n")
-        if f2 == '1' or f2 == 'Login':
-            # Login
-            user = login()
-            user_list = rent_bike(user)
-            
-        elif f2 == '2' or f2 == 'Create an Account':
-            # Create account
-            user_list, user = create_account()
-            user_list = rent_bike(user)
+    # Create the main user worksheet
+    worksheet = workbook.add_worksheet("Users")
 
-        else:
-            print("Invalid Input. Select Login (1) or Create an Account (2) ")
-            # Send back to main rent or return login page if invalid input
-            user_list = rent_or_return()
-        
-        print("Thanks for renting with us!")
+    # These column headers are the attributes of each User object
+    headers = ["Lastname", "Firstname", "Username", "Enc Password", "Rental Status",
+        "Bike Rented", "Encryption Key", "Time Out", "Time In"]
+
+    row = 0
+    column = 0
+
+    # Add the headers to the sheet
+    for item in headers:
+        worksheet.write(row, column, item)
+        column += 1
     
-    elif function == '2' or function == 'Return':
-        
-        #RETURN Function Goes Here
-        
-        print('Thanks for returning your bike!')
-    else:
-        print("Please try again and input a valid command.")
+    # Reset row and column index to add users
+    row = 1
+    column = 0
 
-    return user_list
+    # Add users to the sheet
+    for i in user_list:
+        for j in range(len(headers)):
+            print(i.user_info[j])
+            worksheet.write(row, column, str(i.user_info[j]))
+            column += 1
+        row += 1
+    
+    # Add a second worksheet to view the availability of the bike inventory
+    # worksheet2 = workbook.add_worksheet("Bikes")
 
+
+    workbook.close()
+            
 
 if __name__ == "__main__":
     # Initialize the user list outside of the functions
     user_list = []
 
-    while 1==1:
+    # Initialize the bike list outside of the functions
+    available_bikes = ['A1', 'A2', 'A3', 'A4', 'A5',
+                       'B1', 'B2', 'B3', 'B4', 'B5',
+                       'C1', 'C2', 'C3', 'C4', 'C5',
+                       'D1', 'D2', 'D3', 'D4', 'D5',
+                       'E1', 'E2', 'E3', 'E4', 'E5']
 
-        user_list = rent_or_return()
+    # Create an infinite loop to simulate user operating app
+    while 1==1:
+        # This is the main function to initiate the program
+        user_list, available_bikes = rent_or_return()
+
+        print("Users: ")
         print(user_list)
-        
+        print("User Info: ")
+        for item in user_list:
+            print(item.user_info)
+
+        print("Bike List: ")
+        print(available_bikes)
+
         # Allow user to break loop to simulate closing app
         if input("Continue? Y or N \n") == "N":
+            create_excel()
             break
-        
