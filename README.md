@@ -23,3 +23,16 @@ The terminal will return the user's total cost to rent the bike, at which point 
 Many non-visible functions allow users to create and encrypt their own passwords with randomly generated personalized keys.
 Error handling has also been heavily implemented to return users to main screens or previous functions/actions if their input is invalid. 
 
+In order to run the code itself, the file simply needs to be run in the terminal.
+The main function rent_or_return() is executed inside an infinite while loop, which simulates the program running as a user is inside the rental app/program.
+This function returns the master list of users as well as the running list of available bikes for rent.
+The functions to rent, return, create an account, and login are all called within the rent_or_return() function.
+In order to navigate these options the user will need to input either a number or a string that matches the directions output in the terminal.
+
+For example, the main function will output: Would you like to 'Rent' (1) or 'Return' (2)? Or enter 'Exit' (0) to exit the program.
+
+The user can then type either "Rent" or the number 1 in order to call the rent function. The functionality is the same for the other input options.
+
+When creating an account or logging in, the user will have to manually input their desired information and press enter.
+As a note, the input for the password is hidden from the user so that the password will never be physically displayed in the code or the terminal.
+It will be saved as an encrypted string in the master list.
