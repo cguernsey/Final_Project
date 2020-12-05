@@ -12,7 +12,7 @@ This python code, when entered in a terminal, runs a program that functions as a
 The program allows users to create their own accounts and login securely to what would be considered our "database."
 Users are then able to rent and return bikes similar to the services Bird and Lime offer with electric scooter rentals.
 The code will document the real time that users rent the bike and charge the user when they return the bike.
-The total cost will be a base fee of (((($1.40 plus 10 cents per minute they spend renting.))))
+The total cost will be a base fee of $4.00 plus 10 cents per minute they spend renting.
 The python code is based on the main User class that tracks user attributes, including name, username, password, rental status, bike being rented, and the user's personal encryption key.
 A list of bikes also exists to track the bikes in the system and which bikes are available for rent.
 There are several functions that mirror the actions users can take within the rental system.
