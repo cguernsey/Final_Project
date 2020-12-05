@@ -550,6 +550,7 @@ def rent_or_return():
             else:
                 # Login if selected by user and users exist
                 user = login()
+                # Ensure user is a User object to check rental status
                 if type(user) == User:
                     if rental_check(user):
                         user_list = rent_bike(user)
