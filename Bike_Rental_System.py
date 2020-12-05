@@ -350,16 +350,15 @@ def login():
             # Record the found user and break the loop
             print("Welcome " + user_list[i].firstname + "!")
             user = user_list[i]
-            break
+            return user
 
     if user == "Not found":
         print("Username or Password incorrect ")
         if input("Try again? Y or N \n") == "Y":
             user = login()
+            return user
         else:
             user_list, available_bikes = rent_or_return()
-
-    return user
 
 
 def rent_bike(user):
@@ -551,8 +550,11 @@ def rent_or_return():
             else:
                 # Login if selected by user and users exist
                 user = login()
-                if rental_check(user):
-                    user_list = rent_bike(user)
+                if type(user) == User:
+                    if rental_check(user):
+                        user_list = rent_bike(user)
+                    else:
+                        user_list, available_bikes = rent_or_return()
                 else:
                     user_list, available_bikes = rent_or_return()
 
@@ -580,6 +582,8 @@ def rent_or_return():
 
     else:
         print("Please try again and input a valid command.")
+        # Send back to main login page if invalid input
+        user_list, available_bikes = rent_or_return()
 
     return user_list, available_bikes
 
